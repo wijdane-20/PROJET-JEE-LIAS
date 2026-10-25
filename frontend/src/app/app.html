@@ -1,0 +1,3534 @@
+<!-- ================= LOGIN ================= -->
+
+<div *ngIf="!isLoggedIn" class="login-page">
+
+  <section class="login-shell">
+
+    <div class="login-showcase">
+
+      <div class="showcase-overlay"></div>
+
+      <div class="showcase-content">
+
+        <div class="login-brand">
+          <div class="login-brand-mark">L</div>
+
+          <div>
+            <h1>LIAS</h1>
+            <p>Laboratoire d'Informatique et Applications Scientifiques</p>
+          </div>
+        </div>
+
+        <div class="showcase-main">
+
+          <span class="eyebrow">Plateforme de gestion scientifique</span>
+
+          <h2>
+            Recherche, innovation et collaboration
+            dans un seul espace.
+          </h2>
+
+          <p class="showcase-text">
+            Centralisez les membres, équipes, publications, événements,
+            thèses, archives et rapports annuels du laboratoire LIAS.
+          </p>
+
+          <div class="feature-grid">
+
+            <div class="feature-item">
+              <span class="feature-icon">👥</span>
+              <div>
+                <strong>Membres & équipes</strong>
+                <small>Suivi des chercheurs et affiliations</small>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">📚</span>
+              <div>
+                <strong>Production scientifique</strong>
+                <small>Publications, thèses et événements</small>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">📊</span>
+              <div>
+                <strong>Pilotage</strong>
+                <small>Rapports annuels et indicateurs</small>
+              </div>
+            </div>
+
+            <div class="feature-item">
+              <span class="feature-icon">🗂️</span>
+              <div>
+                <strong>Archivage</strong>
+                <small>Documents, PV et historique</small>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="showcase-footer">
+          <span>● Système LIAS</span>
+          <span>Recherche • Innovation • Collaboration</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="login-panel">
+
+      <div class="login-card">
+
+        <div class="mobile-brand">
+          <div class="login-brand-mark">L</div>
+          <div>
+            <strong>LIAS</strong>
+            <small>Laboratoire d'Informatique et Applications Scientifiques</small>
+          </div>
+        </div>
+
+        <div class="login-heading">
+          <span class="login-kicker">Espace sécurisé</span>
+          <h2>Bienvenue</h2>
+          <p>Connectez-vous pour accéder à la plateforme de gestion du laboratoire.</p>
+        </div>
+
+        <form (ngSubmit)="login()" class="login-form">
+
+          <div class="login-field">
+
+            <label for="loginEmail">
+              Adresse email
+            </label>
+
+            <div class="input-shell">
+              <span class="input-icon">✉</span>
+
+              <input
+                id="loginEmail"
+                type="email"
+                name="email"
+                [(ngModel)]="email"
+                placeholder="admin@lias.ma"
+                autocomplete="username"
+                required
+              >
+            </div>
+
+          </div>
+
+
+          <div class="login-field">
+
+            <label for="loginPassword">
+              Mot de passe
+            </label>
+
+            <div class="input-shell">
+              <span class="input-icon">🔒</span>
+
+              <input
+                id="loginPassword"
+                type="password"
+                name="password"
+                [(ngModel)]="password"
+                placeholder="Saisissez votre mot de passe"
+                autocomplete="current-password"
+                required
+              >
+            </div>
+
+          </div>
+
+
+          <button type="submit" class="login-submit">
+            <span>Se connecter</span>
+            <span class="login-arrow">→</span>
+          </button>
+
+
+          <p
+            *ngIf="message"
+            class="message login-message">
+            {{ message }}
+          </p>
+
+        </form>
+
+
+        <div class="login-divider">
+          <span></span>
+          <small>LIAS</small>
+          <span></span>
+        </div>
+
+
+        <div class="public-access-card">
+
+          <div class="public-access-icon">🌐</div>
+
+          <div>
+            <strong>Accès public</strong>
+            <p>
+              Les visiteurs peuvent consulter les équipes,
+              publications et événements publics.
+            </p>
+          </div>
+
+        </div>
+
+
+        <p class="login-security">
+          🔐 Accès réservé aux utilisateurs autorisés du laboratoire.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<!-- ================= APPLICATION ================= -->
+
+<div *ngIf="isLoggedIn" class="dashboard">
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <aside class="sidebar sidebar-pro">
+
+    <div class="sidebar-brand">
+      <h2>LIAS</h2>
+
+      <p class="sidebar-description">
+        Laboratoire d'Informatique et Applications Scientifiques
+      </p>
+
+      <img
+        src="lias-lab.png"
+        alt="Laboratoire LIAS"
+        class="sidebar-lab-image"
+      >
+
+      <p class="sidebar-slogan">
+        Recherche • Innovation • Collaboration
+      </p>
+    </div>
+
+    <div class="sidebar-user-card">
+      <div class="sidebar-user-avatar">
+        {{ (profileMembre?.prenom || email || 'A').charAt(0).toUpperCase() }}
+      </div>
+
+      <div class="sidebar-user-info">
+        <strong>
+          {{ profileMembre ? ((profileMembre.prenom || '') + ' ' + (profileMembre.nom || '')) : 'Administrateur LIAS' }}
+        </strong>
+
+        <small *ngIf="currentUserRole === 'ADMIN' && dashboardMode === 'ADMIN'">
+          Administrateur
+        </small>
+
+        <small *ngIf="currentUserRole === 'ADMIN' && dashboardMode !== 'ADMIN'">
+          Prévisualisation : {{ dashboardModeLabel }}
+        </small>
+
+        <small *ngIf="currentUserRole !== 'ADMIN'">
+          {{ dashboardModeLabel }}
+        </small>
+      </div>
+
+      <span class="sidebar-user-status"></span>
+    </div>
+
+    <div class="role-preview-card" *ngIf="currentUserRole === 'ADMIN'">
+      <div class="role-preview-head">
+        <span>🎭</span>
+        <div>
+          <strong>Vue par rôle</strong>
+          <small>Prévisualisation du tableau de bord</small>
+        </div>
+      </div>
+
+      <select
+        [(ngModel)]="dashboardMode"
+        name="dashboardMode"
+        (ngModelChange)="setDashboardMode($event)">
+        <option value="ADMIN">Administrateur</option>
+        <option value="DIRECTEUR">Directeur</option>
+        <option value="VICE_DIRECTEUR">Vice-directeur</option>
+        <option value="CHEF_EQUIPE">Chef d'équipe</option>
+        <option value="CHERCHEUR">Chercheur / Permanent</option>
+        <option value="ASSOCIE">Membre associé</option>
+        <option value="DOCTORANT">Doctorant</option>
+      </select>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <div class="sidebar-group-label">Navigation</div>
+
+      <a class="sidebar-link" [class.active]="currentPage === 'dashboard'" (click)="goTo('dashboard')">
+        <span class="nav-icon">📊</span><span>Tableau de bord</span>
+      </a>
+
+      <a class="sidebar-link" [class.active]="currentPage === 'profil'" (click)="goTo('profil')">
+        <span class="nav-icon">👤</span><span>Mon profil</span>
+      </a>
+
+      <a class="sidebar-link" [class.active]="currentPage === 'publications'" (click)="goTo('publications')">
+        <span class="nav-icon">📄</span><span>Publications</span>
+      </a>
+
+      <a class="sidebar-link" [class.active]="currentPage === 'evenements'" (click)="goTo('evenements')">
+        <span class="nav-icon">📅</span><span>Événements</span>
+      </a>
+
+      <a class="sidebar-link" [class.active]="currentPage === 'calendar'" (click)="goTo('calendar')">
+        <span class="nav-icon">🗓️</span><span>Calendrier</span>
+      </a>
+
+      <a class="sidebar-link" [class.active]="currentPage === 'search'" (click)="goTo('search')">
+        <span class="nav-icon">🔎</span><span>Recherche</span>
+      </a>
+
+      <div class="sidebar-group-label" *ngIf="canSeeMembersAndTeams()">Membres & équipes</div>
+
+      <a
+        *ngIf="canSeeMembersAndTeams()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'membres'"
+        (click)="goTo('membres')">
+        <span class="nav-icon">👥</span><span>Membres</span>
+      </a>
+
+      <a
+        *ngIf="canSeeMembersAndTeams()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'equipes'"
+        (click)="goTo('equipes')">
+        <span class="nav-icon">📌</span><span>Équipes</span>
+      </a>
+
+      <a
+        *ngIf="canSeeAffiliations()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'affiliations'"
+        (click)="goTo('affiliations')">
+        <span class="nav-icon">🔗</span><span>Affiliations</span>
+      </a>
+
+      <div class="sidebar-group-label" *ngIf="canSeeInternalModules()">Modules internes</div>
+
+      <a
+        *ngIf="canSeeInternalModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'documents'"
+        (click)="goTo('documents')">
+        <span class="nav-icon">📁</span><span>Archives</span>
+      </a>
+
+      <a
+        *ngIf="canSeeInternalModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'materiel'"
+        (click)="goTo('materiel')">
+        <span class="nav-icon">💻</span><span>Matériel</span>
+      </a>
+
+      <a
+        *ngIf="canSeeInternalModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'besoins'"
+        (click)="goTo('besoins')">
+        <span class="nav-icon">📝</span><span>Besoins matériel</span>
+      </a>
+
+      <a
+        *ngIf="canSeeInternalModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'discussions'"
+        (click)="goTo('discussions')">
+        <span class="nav-icon">💬</span><span>Discussions</span>
+      </a>
+
+      <a
+        *ngIf="canSeeInternalModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'reunions'"
+        (click)="goTo('reunions')">
+        <span class="nav-icon">📋</span><span>PV Réunions</span>
+      </a>
+
+      <a
+        *ngIf="canSeeInternalModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'conventions'"
+        (click)="goTo('conventions')">
+        <span class="nav-icon">🤝</span><span>Conventions</span>
+      </a>
+
+      <a
+        *ngIf="canSeeTheses()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'theses'"
+        (click)="goTo('theses')">
+        <span class="nav-icon">🎓</span><span>Thèses de Doctorat</span>
+      </a>
+
+      <div class="sidebar-group-label" *ngIf="canSeeDirectionModules()">Direction</div>
+
+      <a
+        *ngIf="canSeeDemandes()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'demandes'"
+        (click)="goTo('demandes')">
+        <span class="nav-icon">✅</span><span>Demandes</span>
+        <span class="nav-counter" *ngIf="pendingDemandesCount > 0">{{ pendingDemandesCount }}</span>
+      </a>
+
+      <a
+        *ngIf="canSeeDirectionModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'mandats'"
+        (click)="goTo('mandats')">
+        <span class="nav-icon">👑</span><span>Mandats</span>
+      </a>
+
+      <a
+        *ngIf="canSeeDirectionModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'roles'"
+        (click)="goTo('roles')">
+        <span class="nav-icon">🎭</span><span>Rôles</span>
+      </a>
+
+      <a
+        *ngIf="canSeeInternalModules()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'notifications'"
+        (click)="goTo('notifications')">
+        <span class="nav-icon">🔔</span><span>Notifications</span>
+        <span class="nav-counter" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span>
+      </a>
+
+      <a
+        *ngIf="dashboardMode === 'ADMIN'"
+        class="sidebar-link"
+        [class.active]="currentPage === 'audit'"
+        (click)="goTo('audit')">
+        <span class="nav-icon">🧾</span><span>Historique / Audit</span>
+      </a>
+
+      <a
+        *ngIf="canSeeRapport()"
+        class="sidebar-link"
+        [class.active]="currentPage === 'rapport'"
+        (click)="goTo('rapport')">
+        <span class="nav-icon">📈</span><span>Rapport annuel</span>
+      </a>
+
+    </nav>
+
+    <button class="logout-btn sidebar-logout" (click)="logout()">
+      <span class="nav-icon">🚪</span>
+      <span>Déconnexion</span>
+    </button>
+
+  </aside>
+
+
+  <!-- ================= DASHBOARD ================= -->
+
+  <main
+    *ngIf="currentPage === 'dashboard'"
+    class="dashboard-content dashboard-pro-page">
+
+    <section class="dashboard-pro-hero">
+      <div class="dashboard-pro-hero-content">
+        <span class="dashboard-pro-kicker">Espace LIAS • {{ dashboardModeLabel }}</span>
+        <h1>{{ dashboardGreeting }}</h1>
+        <p>{{ dashboardModeDescription }}</p>
+
+        <div class="dashboard-hero-badges">
+          <span>● Compte actif</span>
+          <span>{{ dashboardModeLabel }}</span>
+          <span *ngIf="dashboardMode === 'ADMIN'">Accès technique global</span>
+          <span *ngIf="dashboardMode === 'DIRECTEUR'">Mandat de direction</span>
+          <span *ngIf="dashboardMode === 'DOCTORANT'">Accès scientifique limité</span>
+        </div>
+      </div>
+
+      <div class="dashboard-pro-hero-side">
+        <div class="dashboard-role-orb">{{ dashboardModeIcon }}</div>
+        <strong>{{ dashboardModeLabel }}</strong>
+        <small>{{ email }}</small>
+      </div>
+    </section>
+
+    <section class="dashboard-kpi-grid">
+      <article class="dashboard-kpi-card" (click)="goTo('membres')" *ngIf="canSeeMembersAndTeams()">
+        <div class="dashboard-kpi-icon">👥</div>
+        <div>
+          <span>Membres</span>
+          <strong>{{ membresCount }}</strong>
+          <small>Profils scientifiques enregistrés</small>
+        </div>
+      </article>
+
+      <article class="dashboard-kpi-card" (click)="goTo('equipes')" *ngIf="canSeeMembersAndTeams()">
+        <div class="dashboard-kpi-icon">🧠</div>
+        <div>
+          <span>Équipes</span>
+          <strong>{{ equipesCount }}</strong>
+          <small>Axes et unités de recherche</small>
+        </div>
+      </article>
+
+      <article class="dashboard-kpi-card" (click)="goTo('publications')">
+        <div class="dashboard-kpi-icon">📄</div>
+        <div>
+          <span>Publications</span>
+          <strong>{{ publicationsCount }}</strong>
+          <small>Production scientifique LIAS</small>
+        </div>
+      </article>
+
+      <article class="dashboard-kpi-card" (click)="goTo('evenements')">
+        <div class="dashboard-kpi-icon">📅</div>
+        <div>
+          <span>Événements</span>
+          <strong>{{ evenementsCount }}</strong>
+          <small>Conférences, séminaires et workshops</small>
+        </div>
+      </article>
+    </section>
+
+    <!-- ADMIN -->
+    <section class="dashboard-role-space" *ngIf="dashboardMode === 'ADMIN'">
+      <div class="dashboard-section-title">
+        <div>
+          <span>Administration système</span>
+          <h2>Pilotage technique de la plateforme</h2>
+        </div>
+        <span class="dashboard-section-badge">ADMIN</span>
+      </div>
+
+      <div class="dashboard-action-grid">
+        <article class="dashboard-action-card" (click)="goTo('membres')">
+          <span class="action-icon">👥</span>
+          <h3>Gestion des membres</h3>
+          <p>Profils, statuts, affiliations et données scientifiques.</p>
+          <strong>Ouvrir →</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('mandats')">
+          <span class="action-icon">👑</span>
+          <h3>Gouvernance</h3>
+          <p>Mandats, responsabilités et historique des rôles.</p>
+          <strong>{{ activeMandatsCount }} mandat(s) actif(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('audit')">
+          <span class="action-icon">🧾</span>
+          <h3>Traçabilité</h3>
+          <p>Consulter l'historique et les opérations du système.</p>
+          <strong>{{ auditLogs.length }} entrée(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('rapport')">
+          <span class="action-icon">📈</span>
+          <h3>Rapport annuel</h3>
+          <p>Indicateurs scientifiques et synthèse annuelle LIAS.</p>
+          <strong>Consulter →</strong>
+        </article>
+      </div>
+    </section>
+
+    <!-- DIRECTEUR -->
+    <section class="dashboard-role-space" *ngIf="dashboardMode === 'DIRECTEUR'">
+      <div class="dashboard-section-title">
+        <div>
+          <span>Direction du laboratoire</span>
+          <h2>Décisions et pilotage scientifique</h2>
+        </div>
+        <span class="dashboard-section-badge">DIRECTEUR</span>
+      </div>
+
+      <div class="dashboard-action-grid">
+        <article class="dashboard-action-card priority-card" (click)="goTo('demandes')">
+          <span class="action-icon">✅</span>
+          <h3>Demandes d'adhésion</h3>
+          <p>Examiner et décider les nouvelles demandes.</p>
+          <strong>{{ pendingDemandesCount }} en attente</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('besoins')">
+          <span class="action-icon">📝</span>
+          <h3>Besoins matériel</h3>
+          <p>Valider les demandes et suivre les besoins internes.</p>
+          <strong>{{ pendingBesoinsCount }} en attente</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('evenements')">
+          <span class="action-icon">📅</span>
+          <h3>Supervision événements</h3>
+          <p>Suivre les événements scientifiques et leurs organisateurs.</p>
+          <strong>{{ evenementsCount }} événement(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('rapport')">
+          <span class="action-icon">📈</span>
+          <h3>Rapport annuel</h3>
+          <p>Piloter le bilan annuel scientifique du laboratoire.</p>
+          <strong>Préparer le rapport →</strong>
+        </article>
+      </div>
+    </section>
+
+    <!-- VICE DIRECTEUR -->
+    <section class="dashboard-role-space" *ngIf="dashboardMode === 'VICE_DIRECTEUR'">
+      <div class="dashboard-section-title">
+        <div>
+          <span>Vice-direction</span>
+          <h2>Suivi opérationnel du laboratoire</h2>
+        </div>
+        <span class="dashboard-section-badge">VICE-DIRECTEUR</span>
+      </div>
+
+      <div class="dashboard-action-grid">
+        <article class="dashboard-action-card" (click)="goTo('equipes')">
+          <span class="action-icon">🧠</span>
+          <h3>Suivi des équipes</h3>
+          <p>Consulter l'organisation scientifique et les axes actifs.</p>
+          <strong>{{ equipesCount }} équipe(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('evenements')">
+          <span class="action-icon">📅</span>
+          <h3>Événements</h3>
+          <p>Coordination des conférences, séminaires et workshops.</p>
+          <strong>{{ evenementsCount }} événement(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('materiel')">
+          <span class="action-icon">💻</span>
+          <h3>Matériel</h3>
+          <p>Suivre les équipements et leur disponibilité.</p>
+          <strong>{{ materiels.length }} référence(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('rapport')">
+          <span class="action-icon">📈</span>
+          <h3>Indicateurs annuels</h3>
+          <p>Consulter les données utiles à la direction.</p>
+          <strong>Voir le bilan →</strong>
+        </article>
+      </div>
+    </section>
+
+    <!-- CHEF EQUIPE -->
+    <section class="dashboard-role-space" *ngIf="dashboardMode === 'CHEF_EQUIPE'">
+      <div class="dashboard-section-title">
+        <div>
+          <span>Responsabilité d'équipe</span>
+          <h2>Mon espace de coordination scientifique</h2>
+        </div>
+        <span class="dashboard-section-badge">CHEF D'ÉQUIPE</span>
+      </div>
+
+      <div class="dashboard-action-grid">
+        <article class="dashboard-action-card" (click)="goTo('equipes')">
+          <span class="action-icon">📌</span>
+          <h3>Mon équipe</h3>
+          <p>Organisation, domaine de recherche et membres de l'équipe.</p>
+          <strong>Consulter →</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('publications')">
+          <span class="action-icon">📄</span>
+          <h3>Production scientifique</h3>
+          <p>Suivre et enrichir les publications de l'équipe.</p>
+          <strong>{{ publicationsCount }} publication(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('discussions')">
+          <span class="action-icon">💬</span>
+          <h3>Discussions</h3>
+          <p>Échanges internes et coordination entre membres.</p>
+          <strong>{{ discussions.length }} discussion(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('besoins')">
+          <span class="action-icon">📝</span>
+          <h3>Besoins de l'équipe</h3>
+          <p>Consulter et soumettre les besoins en matériel.</p>
+          <strong>{{ besoinsMateriel.length }} demande(s)</strong>
+        </article>
+      </div>
+    </section>
+
+    <!-- CHERCHEUR -->
+    <section class="dashboard-role-space" *ngIf="dashboardMode === 'CHERCHEUR'">
+      <div class="dashboard-section-title">
+        <div>
+          <span>Membre permanent / chercheur</span>
+          <h2>Mon activité scientifique</h2>
+        </div>
+        <span class="dashboard-section-badge">CHERCHEUR</span>
+      </div>
+
+      <div class="dashboard-action-grid">
+        <article class="dashboard-action-card" (click)="goTo('profil')">
+          <span class="action-icon">👤</span>
+          <h3>Mon profil scientifique</h3>
+          <p>Biographie, centres d'intérêt et informations personnelles.</p>
+          <strong>Mettre à jour →</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('publications')">
+          <span class="action-icon">📚</span>
+          <h3>Mes publications</h3>
+          <p>Ajouter et consulter la production scientifique.</p>
+          <strong>{{ publicationsCount }} publication(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('evenements')">
+          <span class="action-icon">🎤</span>
+          <h3>Événements scientifiques</h3>
+          <p>Conférences, séminaires et activités du laboratoire.</p>
+          <strong>{{ evenementsCount }} événement(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('discussions')">
+          <span class="action-icon">💬</span>
+          <h3>Collaboration interne</h3>
+          <p>Échanger avec les membres et les équipes LIAS.</p>
+          <strong>Participer →</strong>
+        </article>
+      </div>
+    </section>
+
+    <!-- ASSOCIE -->
+    <section class="dashboard-role-space" *ngIf="dashboardMode === 'ASSOCIE'">
+      <div class="dashboard-section-title">
+        <div>
+          <span>Collaboration externe</span>
+          <h2>Espace membre associé</h2>
+        </div>
+        <span class="dashboard-section-badge">ASSOCIÉ</span>
+      </div>
+
+      <div class="dashboard-action-grid">
+        <article class="dashboard-action-card" (click)="goTo('profil')">
+          <span class="action-icon">👤</span>
+          <h3>Mon profil</h3>
+          <p>Informations professionnelles et laboratoire d'origine.</p>
+          <strong>Consulter →</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('publications')">
+          <span class="action-icon">📄</span>
+          <h3>Publications</h3>
+          <p>Consulter la production scientifique et contribuer selon droits.</p>
+          <strong>{{ publicationsCount }} publication(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('evenements')">
+          <span class="action-icon">📅</span>
+          <h3>Événements accessibles</h3>
+          <p>Participer aux activités scientifiques autorisées.</p>
+          <strong>{{ evenementsCount }} événement(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('search')">
+          <span class="action-icon">🔎</span>
+          <h3>Recherche globale</h3>
+          <p>Explorer membres, événements et publications du LIAS.</p>
+          <strong>Rechercher →</strong>
+        </article>
+      </div>
+    </section>
+
+    <!-- DOCTORANT -->
+    <section class="dashboard-role-space" *ngIf="dashboardMode === 'DOCTORANT'">
+      <div class="dashboard-section-title">
+        <div>
+          <span>Parcours doctoral</span>
+          <h2>Mon espace scientifique</h2>
+        </div>
+        <span class="dashboard-section-badge">DOCTORANT</span>
+      </div>
+
+      <div class="dashboard-action-grid">
+        <article class="dashboard-action-card" (click)="goTo('profil')">
+          <span class="action-icon">👤</span>
+          <h3>Mon profil</h3>
+          <p>Mettre à jour mes informations et centres d'intérêt.</p>
+          <strong>Modifier →</strong>
+        </article>
+
+        <article class="dashboard-action-card priority-card" (click)="goTo('publications')">
+          <span class="action-icon">📄</span>
+          <h3>Mes publications</h3>
+          <p>Ajouter et consulter les publications scientifiques.</p>
+          <strong>{{ publicationsCount }} publication(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('evenements')">
+          <span class="action-icon">📅</span>
+          <h3>Événements</h3>
+          <p>Consulter les activités scientifiques disponibles.</p>
+          <strong>{{ evenementsCount }} événement(s)</strong>
+        </article>
+
+        <article class="dashboard-action-card" (click)="goTo('search')">
+          <span class="action-icon">🔎</span>
+          <h3>Recherche</h3>
+          <p>Retrouver rapidement une publication ou un événement.</p>
+          <strong>Explorer →</strong>
+        </article>
+      </div>
+
+      <div class="dashboard-access-note">
+        <span>🔒</span>
+        <div>
+          <strong>Accès doctorant</strong>
+          <p>Les modules internes administratifs sont masqués dans cette vue conformément au niveau d'accès prévu.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-bottom-grid">
+
+      <article class="dashboard-panel">
+        <div class="dashboard-panel-head">
+          <div>
+            <span>Production scientifique</span>
+            <h2>Publications récentes</h2>
+          </div>
+          <button type="button" (click)="goTo('publications')">Voir tout</button>
+        </div>
+
+        <div class="dashboard-feed" *ngIf="recentPublications.length > 0">
+          <div class="dashboard-feed-item" *ngFor="let item of recentPublications">
+            <div class="feed-icon">📄</div>
+            <div>
+              <strong>{{ item.titre }}</strong>
+              <span>{{ item.auteurPrincipal || 'Auteur non renseigné' }}</span>
+              <small>{{ item.annee || 'Année non renseignée' }} • {{ item.type || 'Publication' }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-panel-empty" *ngIf="recentPublications.length === 0">
+          Aucune publication à afficher.
+        </div>
+      </article>
+
+      <article class="dashboard-panel">
+        <div class="dashboard-panel-head">
+          <div>
+            <span>Agenda scientifique</span>
+            <h2>Événements récents</h2>
+          </div>
+          <button type="button" (click)="goTo('calendar')">Calendrier</button>
+        </div>
+
+        <div class="dashboard-feed" *ngIf="recentEvenements.length > 0">
+          <div class="dashboard-feed-item" *ngFor="let item of recentEvenements">
+            <div class="feed-icon">📅</div>
+            <div>
+              <strong>{{ item.titre }}</strong>
+              <span>{{ item.lieu || 'Lieu non renseigné' }}</span>
+              <small>{{ item.dateDebut || 'Date non renseignée' }} • {{ item.type || 'Événement' }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-panel-empty" *ngIf="recentEvenements.length === 0">
+          Aucun événement à afficher.
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= MON PROFIL ================= -->
+
+  <main
+    *ngIf="currentPage === 'profil'"
+    class="dashboard-content profile-page">
+
+    <section class="profile-hero">
+
+      <div class="profile-hero-left">
+
+        <div class="profile-avatar">
+          <img
+            *ngIf="profileMembre?.photo"
+            [src]="profileMembre.photo"
+            alt="Photo de profil"
+          >
+          <span *ngIf="!profileMembre?.photo">
+            {{ (profileMembre?.prenom || email || 'A').charAt(0).toUpperCase() }}
+          </span>
+        </div>
+
+        <div class="profile-identity">
+
+          <div class="profile-title-row">
+            <h1>
+              {{ profileMembre ? ((profileMembre.prenom || '') + ' ' + (profileMembre.nom || '')) : 'Compte administrateur' }}
+            </h1>
+
+            <span class="profile-role-badge">
+              {{ currentUserRole || 'UTILISATEUR' }}
+            </span>
+          </div>
+
+          <p class="profile-email">
+            {{ email }}
+          </p>
+
+          <div class="profile-meta-row">
+
+            <span class="profile-meta-chip">
+              <span class="dot online"></span>
+              Compte actif
+            </span>
+
+            <span
+              *ngIf="profileMembre?.statut"
+              class="profile-meta-chip">
+              👤 {{ profileMembre.statut }}
+            </span>
+
+            <span class="profile-meta-chip">
+              🛡️ Accès sécurisé
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="profile-hero-actions">
+
+        <button
+          *ngIf="profileMembre"
+          type="button"
+          class="profile-primary-btn"
+          (click)="saveProfile()">
+          💾 Enregistrer
+        </button>
+
+        <button
+          type="button"
+          class="profile-secondary-btn"
+          (click)="loadProfile()">
+          ↻ Actualiser
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section class="profile-grid">
+
+      <div class="profile-main-column">
+
+        <article class="profile-card">
+
+          <div class="profile-card-header">
+            <div>
+              <span class="profile-section-kicker">Compte</span>
+              <h2>Informations du compte</h2>
+            </div>
+
+            <span class="profile-card-icon">🔐</span>
+          </div>
+
+          <div class="profile-account-grid">
+
+            <div class="profile-readonly-box">
+              <span class="profile-box-icon">✉️</span>
+              <div>
+                <small>Email de connexion</small>
+                <strong>{{ email }}</strong>
+              </div>
+            </div>
+
+            <div class="profile-readonly-box">
+              <span class="profile-box-icon">🛡️</span>
+              <div>
+                <small>Rôle du compte</small>
+                <strong>{{ currentUserRole || '-' }}</strong>
+              </div>
+            </div>
+
+            <div class="profile-readonly-box">
+              <span class="profile-box-icon">✅</span>
+              <div>
+                <small>Statut du compte</small>
+                <strong>Actif</strong>
+              </div>
+            </div>
+
+            <div class="profile-readonly-box">
+              <span class="profile-box-icon">🏢</span>
+              <div>
+                <small>Espace</small>
+                <strong>Laboratoire LIAS</strong>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <article
+          *ngIf="profileMembre"
+          class="profile-card">
+
+          <div class="profile-card-header">
+            <div>
+              <span class="profile-section-kicker">Profil membre</span>
+              <h2>Informations personnelles</h2>
+            </div>
+
+            <span class="profile-card-icon">👤</span>
+          </div>
+
+          <div class="profile-form-grid">
+
+            <div class="profile-field">
+              <label>Nom</label>
+              <input
+                type="text"
+                [(ngModel)]="profileForm.nom"
+                name="profileNom"
+                placeholder="Nom"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Prénom</label>
+              <input
+                type="text"
+                [(ngModel)]="profileForm.prenom"
+                name="profilePrenom"
+                placeholder="Prénom"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Email</label>
+              <input
+                type="email"
+                [(ngModel)]="profileForm.email"
+                name="profileEmail"
+                placeholder="Email"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Statut</label>
+              <select
+                [(ngModel)]="profileForm.statut"
+                name="profileStatut">
+
+                <option value="">Choisir un statut</option>
+                <option value="PERMANENT">Permanent</option>
+                <option value="ASSOCIE">Associé</option>
+                <option value="DOCTORANT">Doctorant</option>
+                <option value="RETRAITE">Retraité</option>
+                <option value="ANCIEN">Ancien membre</option>
+
+              </select>
+            </div>
+
+            <div class="profile-field">
+              <label>Établissement d'origine</label>
+              <input
+                type="text"
+                [(ngModel)]="profileForm.etablissementOrigine"
+                name="profileEtablissement"
+                placeholder="Établissement d'origine"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Laboratoire d'origine</label>
+              <input
+                type="text"
+                [(ngModel)]="profileForm.laboratoireOrigine"
+                name="profileLaboratoire"
+                placeholder="Laboratoire d'origine"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Date de naissance</label>
+              <input
+                type="date"
+                [(ngModel)]="profileForm.dateNaissance"
+                name="profileDateNaissance"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Date d'embauche</label>
+              <input
+                type="date"
+                [(ngModel)]="profileForm.dateEmbauche"
+                name="profileDateEmbauche"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Date d'affiliation</label>
+              <input
+                type="date"
+                [(ngModel)]="profileForm.dateAffiliation"
+                name="profileDateAffiliation"
+              >
+            </div>
+
+            <div class="profile-field">
+              <label>Centres d'intérêt</label>
+              <input
+                type="text"
+                [(ngModel)]="profileForm.centresInteret"
+                name="profileCentresInteret"
+                placeholder="IA, systèmes, data..."
+              >
+            </div>
+
+            <div class="profile-field profile-field-full">
+              <label>Photo / URL</label>
+              <input
+                type="text"
+                [(ngModel)]="profileForm.photo"
+                name="profilePhoto"
+                placeholder="URL de la photo"
+              >
+            </div>
+
+            <div class="profile-field profile-field-full">
+              <label>Biographie</label>
+              <textarea
+                [(ngModel)]="profileForm.biographie"
+                name="profileBiographie"
+                placeholder="Présentez votre parcours, vos activités scientifiques et vos axes de recherche...">
+              </textarea>
+            </div>
+
+          </div>
+
+          <div class="profile-save-row">
+            <button
+              type="button"
+              class="profile-primary-btn"
+              (click)="saveProfile()">
+              💾 Enregistrer les modifications
+            </button>
+          </div>
+
+        </article>
+
+
+        <article
+          *ngIf="!profileMembre"
+          class="profile-card profile-admin-card">
+
+          <div class="admin-illustration">
+            <span>🛡️</span>
+          </div>
+
+          <div class="admin-content">
+
+            <span class="profile-section-kicker">Administration</span>
+
+            <h2>Compte administrateur LIAS</h2>
+
+            <p>
+              Ce compte est utilisé pour l'administration technique et la gestion globale
+              de la plateforme. Il n'est pas nécessaire qu'il soit associé à une fiche membre.
+            </p>
+
+            <div class="admin-info-grid">
+
+              <div>
+                <small>Compte</small>
+                <strong>{{ email }}</strong>
+              </div>
+
+              <div>
+                <small>Niveau d'accès</small>
+                <strong>Administrateur</strong>
+              </div>
+
+              <div>
+                <small>État</small>
+                <strong class="text-success">● Actif</strong>
+              </div>
+
+              <div>
+                <small>Plateforme</small>
+                <strong>LIAS Manager</strong>
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <div
+          *ngIf="profileMessage"
+          class="profile-feedback"
+          [class.success]="profileMessage.includes('succès')">
+          <span>ℹ️</span>
+          <span>{{ profileMessage }}</span>
+        </div>
+
+      </div>
+
+
+      <aside class="profile-side-column">
+
+        <article class="profile-card compact-card">
+
+          <div class="profile-card-header">
+            <div>
+              <span class="profile-section-kicker">Sécurité</span>
+              <h2>Accès & permissions</h2>
+            </div>
+          </div>
+
+          <div class="permission-list">
+
+            <div class="permission-item">
+              <span class="permission-check">✓</span>
+              <div>
+                <strong>Gestion des membres</strong>
+                <small>Ajouter, modifier et consulter</small>
+              </div>
+            </div>
+
+            <div class="permission-item">
+              <span class="permission-check">✓</span>
+              <div>
+                <strong>Gestion scientifique</strong>
+                <small>Publications, événements et thèses</small>
+              </div>
+            </div>
+
+            <div class="permission-item">
+              <span class="permission-check">✓</span>
+              <div>
+                <strong>Administration</strong>
+                <small>Mandats, rôles, demandes et matériel</small>
+              </div>
+            </div>
+
+            <div class="permission-item">
+              <span class="permission-check">✓</span>
+              <div>
+                <strong>Archives & rapports</strong>
+                <small>Documents et rapports annuels</small>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <article class="profile-card compact-card">
+
+          <div class="profile-card-header">
+            <div>
+              <span class="profile-section-kicker">Vue rapide</span>
+              <h2>Activité LIAS</h2>
+            </div>
+          </div>
+
+          <div class="profile-stat-list">
+
+            <div class="profile-stat-item">
+              <span class="stat-icon">👥</span>
+              <div>
+                <strong>{{ membresCount }}</strong>
+                <small>Membres</small>
+              </div>
+            </div>
+
+            <div class="profile-stat-item">
+              <span class="stat-icon">🧠</span>
+              <div>
+                <strong>{{ equipesCount }}</strong>
+                <small>Équipes</small>
+              </div>
+            </div>
+
+            <div class="profile-stat-item">
+              <span class="stat-icon">📄</span>
+              <div>
+                <strong>{{ publicationsCount }}</strong>
+                <small>Publications</small>
+              </div>
+            </div>
+
+            <div class="profile-stat-item">
+              <span class="stat-icon">📅</span>
+              <div>
+                <strong>{{ evenementsCount }}</strong>
+                <small>Événements</small>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <article class="profile-card compact-card profile-help-card">
+
+          <span class="help-icon">💡</span>
+
+          <h3>Profil LIAS</h3>
+
+          <p>
+            Les informations de cette page permettent d'identifier le compte
+            connecté et, lorsqu'une fiche membre existe, de mettre à jour les
+            informations scientifiques personnelles.
+          </p>
+
+        </article>
+
+      </aside>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= MEMBRES ================= -->
+
+  <main
+    *ngIf="currentPage === 'membres'"
+    class="dashboard-content directory-page">
+
+    <section class="directory-hero">
+      <div>
+        <span class="directory-kicker">Organisation du laboratoire</span>
+        <h1>Membres du LIAS</h1>
+        <p>
+          Annuaire scientifique, statuts, affiliations et informations des membres du laboratoire.
+        </p>
+      </div>
+
+      <div class="directory-hero-stat">
+        <strong>{{ membresCount }}</strong>
+        <span>Membres enregistrés</span>
+      </div>
+    </section>
+
+    <section class="directory-stats">
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">👥</span>
+        <div><strong>{{ membresCount }}</strong><small>Total membres</small></div>
+      </div>
+
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">🧑‍🏫</span>
+        <div><strong>{{ countMembresByStatut('PERMANENT') }}</strong><small>Permanents</small></div>
+      </div>
+
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">🎓</span>
+        <div><strong>{{ countMembresByStatut('DOCTORANT') }}</strong><small>Doctorants</small></div>
+      </div>
+
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">🤝</span>
+        <div><strong>{{ countMembresByStatut('ASSOCIE') }}</strong><small>Associés</small></div>
+      </div>
+    </section>
+
+    <section class="directory-toolbar">
+      <div class="directory-search">
+        <span>🔎</span>
+        <input
+          type="text"
+          [(ngModel)]="membreSearch"
+          name="membreSearch"
+          placeholder="Rechercher par nom, email, laboratoire..."
+        >
+      </div>
+
+      <select [(ngModel)]="membreStatutFilter" name="membreStatutFilter" class="directory-filter">
+        <option value="">Tous les statuts</option>
+        <option value="PERMANENT">Permanent</option>
+        <option value="ASSOCIE">Associé</option>
+        <option value="DOCTORANT">Doctorant</option>
+        <option value="RETRAITE">Retraité</option>
+        <option value="ANCIEN">Ancien membre</option>
+      </select>
+
+      <span class="directory-results">{{ filteredMembres.length }} résultat(s)</span>
+    </section>
+
+    <section class="membre-form directory-form">
+      <div class="directory-section-heading">
+        <div>
+          <span class="directory-kicker">Gestion</span>
+          <h2>{{ editingMembre ? 'Modifier le membre' : 'Ajouter un membre' }}</h2>
+        </div>
+        <span class="directory-heading-icon">👤</span>
+      </div>
+
+      <div class="form-grid">
+        <div><label>Nom</label><input type="text" [(ngModel)]="membreForm.nom" name="nom" placeholder="Nom"></div>
+        <div><label>Prénom</label><input type="text" [(ngModel)]="membreForm.prenom" name="prenom" placeholder="Prénom"></div>
+        <div><label>Email</label><input type="email" [(ngModel)]="membreForm.email" name="emailMembre" placeholder="prenom.nom@lias.ma"></div>
+
+        <div>
+          <label>Statut</label>
+          <select [(ngModel)]="membreForm.statut" name="statut">
+            <option value="">Choisir un statut</option>
+            <option value="PERMANENT">Permanent</option>
+            <option value="ASSOCIE">Associé</option>
+            <option value="DOCTORANT">Doctorant</option>
+            <option value="RETRAITE">Retraité</option>
+            <option value="ANCIEN">Ancien membre</option>
+          </select>
+        </div>
+
+        <div><label>Établissement d'origine</label><input type="text" [(ngModel)]="membreForm.etablissementOrigine" name="etablissementOrigine" placeholder="Établissement d'origine"></div>
+        <div><label>Laboratoire d'origine</label><input type="text" [(ngModel)]="membreForm.laboratoireOrigine" name="laboratoireOrigine" placeholder="Laboratoire d'origine"></div>
+        <div><label>Date de naissance</label><input type="date" [(ngModel)]="membreForm.dateNaissance" name="dateNaissance"></div>
+        <div><label>Date d'embauche</label><input type="date" [(ngModel)]="membreForm.dateEmbauche" name="dateEmbauche"></div>
+        <div><label>Date d'affiliation</label><input type="date" [(ngModel)]="membreForm.dateAffiliation" name="dateAffiliation"></div>
+        <div><label>Centres d'intérêt</label><input type="text" [(ngModel)]="membreForm.centresInteret" name="centresInteret" placeholder="IA, Big Data, Réseaux..."></div>
+        <div><label>Photo / URL</label><input type="text" [(ngModel)]="membreForm.photo" name="photoMembre" placeholder="URL de la photo (optionnel)"></div>
+      </div>
+
+      <textarea [(ngModel)]="membreForm.biographie" name="biographie" placeholder="Biographie et parcours scientifique"></textarea>
+
+      <div class="form-actions">
+        <button type="button" (click)="saveMembre()">
+          {{ editingMembre ? '💾 Enregistrer les modifications' : '＋ Ajouter le membre' }}
+        </button>
+        <button type="button" *ngIf="editingMembre" class="cancel-btn" (click)="resetMembreForm()">Annuler</button>
+      </div>
+    </section>
+
+    <section class="member-card-grid" *ngIf="filteredMembres.length > 0">
+      <article class="member-profile-card" *ngFor="let membre of filteredMembres">
+        <div class="member-card-top">
+          <div class="member-avatar">
+            <img *ngIf="membre.photo" [src]="membre.photo" [alt]="membre.prenom + ' ' + membre.nom">
+            <span *ngIf="!membre.photo">{{ (membre.prenom || membre.nom || 'M').charAt(0).toUpperCase() }}</span>
+          </div>
+
+          <div class="member-card-actions">
+            <button type="button" class="icon-edit-btn" title="Modifier" (click)="editMembre(membre)">✎</button>
+            <button type="button" class="icon-delete-btn" title="Supprimer" (click)="deleteMembre(membre.id)">🗑</button>
+          </div>
+        </div>
+
+        <div class="member-card-body">
+          <h3>{{ membre.prenom }} {{ membre.nom }}</h3>
+          <p class="member-email">{{ membre.email }}</p>
+
+          <div class="member-badges">
+            <span
+              class="member-status-badge"
+              [class.status-permanent]="membre.statut === 'PERMANENT'"
+              [class.status-doctorant]="membre.statut === 'DOCTORANT'"
+              [class.status-associe]="membre.statut === 'ASSOCIE'">
+              {{ formatMembreStatut(membre.statut) }}
+            </span>
+            <span class="member-active-badge" [class.inactive]="membre.actif === false">
+              {{ membre.actif === false ? 'Inactif' : 'Actif' }}
+            </span>
+          </div>
+
+          <div class="member-info-list">
+            <div><span>🏛️</span><p><small>Établissement</small><strong>{{ membre.etablissementOrigine || 'Non renseigné' }}</strong></p></div>
+            <div><span>🧪</span><p><small>Laboratoire</small><strong>{{ membre.laboratoireOrigine || 'LIAS' }}</strong></p></div>
+            <div><span>🔬</span><p><small>Centres d'intérêt</small><strong>{{ membre.centresInteret || 'Non renseigné' }}</strong></p></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="directory-empty" *ngIf="filteredMembres.length === 0">
+      <span>👥</span>
+      <h3>Aucun membre trouvé</h3>
+      <p>Modifiez la recherche ou ajoutez un nouveau membre.</p>
+    </div>
+
+  </main>
+
+
+  <!-- ================= EQUIPES ================= -->
+
+  <main
+    *ngIf="currentPage === 'equipes'"
+    class="dashboard-content directory-page">
+
+    <section class="directory-hero teams-hero">
+      <div>
+        <span class="directory-kicker">Recherche & innovation</span>
+        <h1>Équipes de recherche</h1>
+        <p>
+          Organisation des axes scientifiques et présentation des équipes actives du laboratoire.
+        </p>
+      </div>
+
+      <div class="directory-hero-stat">
+        <strong>{{ equipesCount }}</strong>
+        <span>Équipes de recherche</span>
+      </div>
+    </section>
+
+    <section class="directory-stats">
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">🧠</span>
+        <div><strong>{{ equipesCount }}</strong><small>Total équipes</small></div>
+      </div>
+
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">✅</span>
+        <div><strong>{{ countActiveEquipes() }}</strong><small>Équipes actives</small></div>
+      </div>
+
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">🔬</span>
+        <div><strong>{{ equipes.length }}</strong><small>Axes scientifiques</small></div>
+      </div>
+
+      <div class="directory-stat-card">
+        <span class="directory-stat-icon">🌐</span>
+        <div><strong>LIAS</strong><small>Laboratoire</small></div>
+      </div>
+    </section>
+
+    <section class="directory-toolbar">
+      <div class="directory-search">
+        <span>🔎</span>
+        <input
+          type="text"
+          [(ngModel)]="equipeSearch"
+          name="equipeSearch"
+          placeholder="Rechercher une équipe ou un domaine..."
+        >
+      </div>
+      <span class="directory-results">{{ filteredEquipes.length }} équipe(s)</span>
+    </section>
+
+    <section class="membre-form directory-form">
+      <div class="directory-section-heading">
+        <div>
+          <span class="directory-kicker">Gestion</span>
+          <h2>{{ editingEquipe ? 'Modifier l’équipe' : 'Ajouter une équipe' }}</h2>
+        </div>
+        <span class="directory-heading-icon">🧠</span>
+      </div>
+
+      <div class="form-grid">
+        <div>
+          <label>Nom de l'équipe</label>
+          <input type="text" [(ngModel)]="equipeForm.nom" name="nomEquipe" placeholder="Ex. Intelligence Artificielle & Vision">
+        </div>
+
+        <div>
+          <label>Domaine de recherche</label>
+          <input type="text" [(ngModel)]="equipeForm.domaineRecherche" name="domaineRecherche" placeholder="Ex. IA, Data Science, Cybersécurité">
+        </div>
+
+        <div>
+          <label>
+            <input type="checkbox" [(ngModel)]="equipeForm.active" name="equipeActive">
+            Équipe active
+          </label>
+        </div>
+      </div>
+
+      <textarea [(ngModel)]="equipeForm.description" name="descriptionEquipe" placeholder="Description, axes scientifiques et objectifs de l'équipe"></textarea>
+
+      <div class="form-actions">
+        <button type="button" (click)="saveEquipe()">
+          {{ editingEquipe ? '💾 Enregistrer les modifications' : '＋ Ajouter l’équipe' }}
+        </button>
+        <button type="button" *ngIf="editingEquipe" class="cancel-btn" (click)="resetEquipeForm()">Annuler</button>
+      </div>
+    </section>
+
+    <section class="team-card-grid" *ngIf="filteredEquipes.length > 0">
+      <article class="team-card" *ngFor="let equipe of filteredEquipes">
+        <div class="team-visual" [attr.data-theme]="getEquipeTheme(equipe)">
+          <span class="team-visual-icon">{{ getEquipeIcon(equipe) }}</span>
+          <span class="team-lab-mark">LIAS</span>
+        </div>
+
+        <div class="team-card-content">
+          <div class="team-card-head">
+            <div>
+              <span class="team-domain">{{ equipe.domaineRecherche || 'Recherche scientifique' }}</span>
+              <h3>{{ equipe.nom }}</h3>
+            </div>
+            <span class="team-status" [class.inactive]="equipe.active === false">
+              {{ equipe.active === false ? 'Inactive' : 'Active' }}
+            </span>
+          </div>
+
+          <p class="team-description">
+            {{ equipe.description || 'Équipe de recherche du laboratoire LIAS.' }}
+          </p>
+
+          <div class="team-card-footer">
+            <div class="team-meta">
+              <span>🔬 Axe scientifique</span>
+              <span>🏢 LIAS</span>
+            </div>
+
+            <div class="member-card-actions">
+              <button type="button" class="icon-edit-btn" title="Modifier" (click)="editEquipe(equipe)">✎</button>
+              <button type="button" class="icon-delete-btn" title="Supprimer" (click)="deleteEquipe(equipe.id)">🗑</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="directory-empty" *ngIf="filteredEquipes.length === 0">
+      <span>🧠</span>
+      <h3>Aucune équipe trouvée</h3>
+      <p>Modifiez la recherche ou ajoutez une nouvelle équipe.</p>
+    </div>
+
+  </main>
+
+
+  <!-- ================= PUBLICATIONS ================= -->
+
+  <main
+    *ngIf="currentPage === 'publications'"
+    class="dashboard-content">
+
+    <h1>Gestion des publications</h1>
+
+    <p>
+      Ajouter, modifier et consulter les publications scientifiques.
+    </p>
+
+
+    <div class="membre-form">
+
+      <h2>
+        {{ editingPublication ? 'Modifier la publication' : 'Ajouter une publication' }}
+      </h2>
+
+
+      <div class="form-grid">
+
+        <input
+          type="text"
+          [(ngModel)]="publicationForm.titre"
+          name="titrePublication"
+          placeholder="Titre"
+        >
+
+
+        <select
+          [(ngModel)]="publicationForm.type"
+          name="typePublication">
+
+          <option value="">
+            Choisir un type
+          </option>
+
+          <option value="ARTICLE">
+            Article
+          </option>
+
+          <option value="CONFERENCE">
+            Conférence
+          </option>
+
+          <option value="LIVRE">
+            Livre
+          </option>
+
+          <option value="THESE">
+            Thèse
+          </option>
+
+        </select>
+
+
+        <input
+          type="number"
+          [(ngModel)]="publicationForm.annee"
+          name="anneePublication"
+          placeholder="Année"
+        >
+
+
+        <input
+          type="text"
+          [(ngModel)]="publicationForm.auteurPrincipal"
+          name="auteurPrincipal"
+          placeholder="Auteur principal"
+        >
+
+
+        <input
+          type="text"
+          [(ngModel)]="publicationForm.doi"
+          name="doi"
+          placeholder="DOI"
+        >
+
+
+        <input
+          type="text"
+          [(ngModel)]="publicationForm.equipe"
+          name="equipePublication"
+          placeholder="Équipe"
+        >
+
+
+        <input
+          type="text"
+          [(ngModel)]="publicationForm.lien"
+          name="lienPublication"
+          placeholder="Lien"
+        >
+
+      </div>
+
+
+      <textarea
+        [(ngModel)]="publicationForm.resume"
+        name="resumePublication"
+        placeholder="Résumé">
+      </textarea>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          (click)="savePublication()">
+
+          {{ editingPublication ? 'Enregistrer les modifications' : 'Ajouter' }}
+
+        </button>
+
+
+        <button
+          type="button"
+          *ngIf="editingPublication"
+          class="cancel-btn"
+          (click)="resetPublicationForm()">
+
+          Annuler
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="members-table">
+
+      <h2>Liste des publications</h2>
+
+      <table *ngIf="publications.length > 0">
+
+        <thead>
+
+          <tr>
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Année</th>
+            <th>Auteur</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let publication of publications">
+
+            <td>{{ publication.titre }}</td>
+            <td>{{ publication.type }}</td>
+            <td>{{ publication.annee }}</td>
+            <td>{{ publication.auteurPrincipal }}</td>
+
+            <td class="actions">
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="editPublication(publication)">
+                Modifier
+              </button>
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deletePublication(publication.id)">
+                Supprimer
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+
+      <p *ngIf="publications.length === 0">
+        Aucune publication enregistrée.
+      </p>
+
+    </div>
+
+  </main>
+
+
+  <!-- ================= EVENEMENTS ================= -->
+
+  <main
+    *ngIf="currentPage === 'evenements'"
+    class="dashboard-content">
+
+    <h1>Gestion des événements</h1>
+
+    <p>
+      Ajouter, modifier et consulter les événements scientifiques.
+    </p>
+
+
+    <div class="membre-form">
+
+      <h2>
+        {{ editingEvenement ? 'Modifier l’événement' : 'Ajouter un événement' }}
+      </h2>
+
+
+      <div class="form-grid">
+
+        <input
+          type="text"
+          [(ngModel)]="evenementForm.titre"
+          name="titreEvenement"
+          placeholder="Titre"
+        >
+
+
+        <select
+          [(ngModel)]="evenementForm.type"
+          name="typeEvenement">
+
+          <option value="">
+            Choisir un type
+          </option>
+
+          <option value="CONFERENCE">
+            Conférence
+          </option>
+
+          <option value="SEMINAIRE">
+            Séminaire
+          </option>
+
+          <option value="WORKSHOP">
+            Workshop
+          </option>
+
+          <option value="REUNION">
+            Réunion
+          </option>
+
+        </select>
+
+
+        <div>
+
+          <label>Date de début</label>
+
+          <input
+            type="date"
+            [(ngModel)]="evenementForm.dateDebut"
+            name="dateDebut"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>Date de fin</label>
+
+          <input
+            type="date"
+            [(ngModel)]="evenementForm.dateFin"
+            name="dateFin"
+          >
+
+        </div>
+
+
+        <input
+          type="text"
+          [(ngModel)]="evenementForm.lieu"
+          name="lieuEvenement"
+          placeholder="Lieu"
+        >
+
+
+        <input
+          type="text"
+          [(ngModel)]="evenementForm.organisateur"
+          name="organisateur"
+          placeholder="Organisateur"
+        >
+
+      </div>
+
+
+      <textarea
+        [(ngModel)]="evenementForm.description"
+        name="descriptionEvenement"
+        placeholder="Description">
+      </textarea>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          (click)="saveEvenement()">
+
+          {{ editingEvenement ? 'Enregistrer les modifications' : 'Ajouter' }}
+
+        </button>
+
+
+        <button
+          type="button"
+          *ngIf="editingEvenement"
+          class="cancel-btn"
+          (click)="resetEvenementForm()">
+
+          Annuler
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="members-table">
+
+      <h2>Liste des événements</h2>
+
+      <table *ngIf="evenements.length > 0">
+
+        <thead>
+
+          <tr>
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Lieu</th>
+            <th>Organisateur</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let evenement of evenements">
+
+            <td>{{ evenement.titre }}</td>
+            <td>{{ evenement.type }}</td>
+            <td>{{ evenement.dateDebut }}</td>
+            <td>{{ evenement.dateFin }}</td>
+            <td>{{ evenement.lieu }}</td>
+            <td>{{ evenement.organisateur }}</td>
+
+            <td class="actions">
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="editEvenement(evenement)">
+                Modifier
+              </button>
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteEvenement(evenement.id)">
+                Supprimer
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+
+      <p *ngIf="evenements.length === 0">
+        Aucun événement enregistré.
+      </p>
+
+    </div>
+
+  </main>
+
+
+  <!-- ================= AFFILIATIONS ================= -->
+
+  <main
+    *ngIf="currentPage === 'affiliations'"
+    class="dashboard-content">
+
+    <h1>Historique des affiliations</h1>
+
+    <p>
+      Gérer les périodes d'affiliation des membres du laboratoire LIAS.
+    </p>
+
+
+    <div class="membre-form">
+
+      <h2>
+        {{ editingAffiliation ? 'Modifier l’affiliation' : 'Ajouter une affiliation' }}
+      </h2>
+
+
+      <div class="form-grid">
+
+        <input
+          type="number"
+          [(ngModel)]="affiliationForm.membreId"
+          name="membreId"
+          placeholder="ID du membre"
+        >
+
+
+        <input
+          type="text"
+          [(ngModel)]="affiliationForm.equipe"
+          name="equipeAffiliation"
+          placeholder="Équipe"
+        >
+
+
+        <select
+          [(ngModel)]="affiliationForm.role"
+          name="roleAffiliation">
+
+          <option value="">
+            Choisir un rôle
+          </option>
+
+          <option value="DIRECTEUR">
+            Directeur
+          </option>
+
+          <option value="VICE_DIRECTEUR">
+            Vice-directeur
+          </option>
+
+          <option value="CHEF_EQUIPE">
+            Chef d'équipe
+          </option>
+
+          <option value="MEMBRE_EQUIPE">
+            Membre d'équipe
+          </option>
+
+        </select>
+
+
+        <div>
+
+          <label>Date de début</label>
+
+          <input
+            type="date"
+            [(ngModel)]="affiliationForm.dateDebut"
+            name="dateDebutAffiliation"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>Date de fin</label>
+
+          <input
+            type="date"
+            [(ngModel)]="affiliationForm.dateFin"
+            name="dateFinAffiliation"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>
+
+            <input
+              type="checkbox"
+              [(ngModel)]="affiliationForm.active"
+              name="activeAffiliation"
+            >
+
+            Affiliation active
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          (click)="saveAffiliation()">
+
+          {{ editingAffiliation ? 'Enregistrer les modifications' : 'Ajouter' }}
+
+        </button>
+
+
+        <button
+          type="button"
+          *ngIf="editingAffiliation"
+          class="cancel-btn"
+          (click)="resetAffiliationForm()">
+
+          Annuler
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="members-table">
+
+      <h2>Historique des affiliations</h2>
+
+      <table *ngIf="affiliations.length > 0">
+
+        <thead>
+
+          <tr>
+            <th>Membre ID</th>
+            <th>Équipe</th>
+            <th>Rôle</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Active</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let affiliation of affiliations">
+
+            <td>
+              {{ affiliation.membreId }}
+            </td>
+
+            <td>
+              {{ affiliation.equipe }}
+            </td>
+
+            <td>
+              {{ affiliation.role }}
+            </td>
+
+            <td>
+              {{ affiliation.dateDebut }}
+            </td>
+
+            <td>
+              {{ affiliation.dateFin || '-' }}
+            </td>
+
+            <td>
+              {{ affiliation.active ? 'Oui' : 'Non' }}
+            </td>
+
+            <td class="actions">
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="editAffiliation(affiliation)">
+                Modifier
+              </button>
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteAffiliation(affiliation.id)">
+                Supprimer
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+
+      <p *ngIf="affiliations.length === 0">
+        Aucune affiliation enregistrée.
+      </p>
+
+    </div>
+
+  </main>
+
+
+  <!-- ================= MANDATS ================= -->
+
+  <main
+    *ngIf="currentPage === 'mandats'"
+    class="dashboard-content">
+
+    <h1>Gestion des mandats</h1>
+
+    <p>
+      Gérer les périodes de responsabilité et l'historique des mandats du laboratoire LIAS.
+    </p>
+
+
+    <div class="membre-form">
+
+      <h2>
+        {{ editingMandat ? 'Modifier le mandat' : 'Ajouter un mandat' }}
+      </h2>
+
+
+      <div class="form-grid">
+
+        <input
+          type="number"
+          [(ngModel)]="mandatForm.membreId"
+          name="mandatMembreId"
+          placeholder="ID du membre"
+        >
+
+
+        <select
+          [(ngModel)]="mandatForm.role"
+          name="mandatRole">
+
+          <option value="">
+            Choisir un rôle
+          </option>
+
+          <option value="DIRECTEUR">
+            Directeur
+          </option>
+
+          <option value="VICE_DIRECTEUR">
+            Vice-directeur
+          </option>
+
+          <option value="CHEF_EQUIPE">
+            Chef d'équipe
+          </option>
+
+          <option value="MEMBRE_EQUIPE">
+            Membre d'équipe
+          </option>
+
+        </select>
+
+
+        <div>
+
+          <label>Date de début</label>
+
+          <input
+            type="date"
+            [(ngModel)]="mandatForm.dateDebut"
+            name="mandatDateDebut"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>Date de fin</label>
+
+          <input
+            type="date"
+            [(ngModel)]="mandatForm.dateFin"
+            name="mandatDateFin"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>
+
+            <input
+              type="checkbox"
+              [(ngModel)]="mandatForm.actif"
+              name="mandatActif"
+            >
+
+            Mandat actif
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          (click)="saveMandat()">
+
+          {{ editingMandat ? 'Enregistrer les modifications' : 'Ajouter' }}
+
+        </button>
+
+
+        <button
+          type="button"
+          *ngIf="editingMandat"
+          class="cancel-btn"
+          (click)="resetMandatForm()">
+
+          Annuler
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="members-table">
+
+      <h2>Historique des mandats</h2>
+
+      <table *ngIf="mandats.length > 0">
+
+        <thead>
+
+          <tr>
+            <th>Membre ID</th>
+            <th>Rôle</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Actif</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let mandat of mandats">
+
+            <td>
+              {{ mandat.membreId }}
+            </td>
+
+            <td>
+              {{ mandat.role }}
+            </td>
+
+            <td>
+              {{ mandat.dateDebut }}
+            </td>
+
+            <td>
+              {{ mandat.dateFin || '-' }}
+            </td>
+
+            <td>
+              {{ mandat.actif ? 'Oui' : 'Non' }}
+            </td>
+
+            <td class="actions">
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="editMandat(mandat)">
+                Modifier
+              </button>
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteMandat(mandat.id)">
+                Supprimer
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+
+      <p *ngIf="mandats.length === 0">
+        Aucun mandat enregistré.
+      </p>
+
+    </div>
+
+  </main>
+
+
+
+  <!-- ================= DEMANDES D'ADHESION ================= -->
+  <main *ngIf="currentPage === 'demandes'" class="dashboard-content">
+    <h1>Demandes d'adhésion</h1>
+    <p>Consulter et gérer les demandes d'adhésion au laboratoire.</p>
+    <div class="membre-form">
+      <h2>{{ editingDemande ? 'Modifier la demande' : 'Ajouter une demande' }}</h2>
+      <div class="form-grid">
+        <input type="text" [(ngModel)]="demandeForm.nom" name="demandeNom" placeholder="Nom">
+        <input type="text" [(ngModel)]="demandeForm.prenom" name="demandePrenom" placeholder="Prénom">
+        <input type="email" [(ngModel)]="demandeForm.email" name="demandeEmail" placeholder="Email">
+        <input type="text" [(ngModel)]="demandeForm.cvFichier" name="demandeCv" placeholder="CV / fichier">
+        <select [(ngModel)]="demandeForm.statut" name="demandeStatut">
+          <option value="EN_ATTENTE">En attente</option>
+          <option value="ACCEPTEE">Acceptée</option>
+          <option value="REFUSEE">Refusée</option>
+        </select>
+        <input type="text" [(ngModel)]="demandeForm.commentaireDecision" name="demandeCommentaire" placeholder="Commentaire de décision">
+      </div>
+      <textarea [(ngModel)]="demandeForm.motivation" name="demandeMotivation" placeholder="Motivation"></textarea>
+      <div class="form-actions">
+        <button type="button" (click)="saveDemande()">{{ editingDemande ? 'Enregistrer' : 'Ajouter' }}</button>
+        <button type="button" *ngIf="editingDemande" class="cancel-btn" (click)="resetDemandeForm()">Annuler</button>
+      </div>
+    </div>
+    <div class="members-table">
+      <h2>Liste des demandes</h2>
+      <table *ngIf="demandesAdhesion.length > 0">
+        <thead><tr><th>Nom</th><th>Prénom</th><th>Email</th><th>Statut</th><th>Motivation</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let item of demandesAdhesion">
+            <td>{{ item.nom }}</td><td>{{ item.prenom }}</td><td>{{ item.email }}</td><td>{{ item.statut }}</td><td>{{ item.motivation }}</td>
+            <td class="actions"><button type="button" class="edit-btn" (click)="editDemande(item)">Modifier</button><button type="button" class="delete-btn" (click)="deleteDemande(item.id)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="demandesAdhesion.length === 0">Aucune demande enregistrée.</p>
+    </div>
+  </main>
+
+  <!-- ================= ROLES HISTORIQUES ================= -->
+  <main *ngIf="currentPage === 'roles'" class="dashboard-content">
+    <h1>Historique des rôles</h1>
+    <p>Suivre les responsabilités et rôles successifs des membres.</p>
+    <div class="membre-form">
+      <h2>{{ editingRole ? 'Modifier le rôle' : 'Ajouter un rôle' }}</h2>
+      <div class="form-grid">
+        <input type="number" [(ngModel)]="roleForm.membreId" name="roleMembreId" placeholder="ID du membre">
+        <select [(ngModel)]="roleForm.role" name="roleNom">
+          <option value="">Choisir un rôle</option>
+          <option value="DIRECTEUR">Directeur</option>
+          <option value="VICE_DIRECTEUR">Vice-directeur</option>
+          <option value="CHEF_EQUIPE">Chef d'équipe</option>
+          <option value="MEMBRE_EQUIPE">Membre d'équipe</option>
+        </select>
+        <div><label>Date de début</label><input type="date" [(ngModel)]="roleForm.dateDebut" name="roleDateDebut"></div>
+        <div><label>Date de fin</label><input type="date" [(ngModel)]="roleForm.dateFin" name="roleDateFin"></div>
+        <div><label><input type="checkbox" [(ngModel)]="roleForm.actif" name="roleActif"> Rôle actif</label></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" (click)="saveRole()">{{ editingRole ? 'Enregistrer' : 'Ajouter' }}</button>
+        <button type="button" *ngIf="editingRole" class="cancel-btn" (click)="resetRoleForm()">Annuler</button>
+      </div>
+    </div>
+    <div class="members-table">
+      <h2>Historique</h2>
+      <table *ngIf="rolesHistoriques.length > 0">
+        <thead><tr><th>Membre ID</th><th>Rôle</th><th>Début</th><th>Fin</th><th>Actif</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let item of rolesHistoriques">
+            <td>{{ item.membreId }}</td><td>{{ item.role }}</td><td>{{ item.dateDebut }}</td><td>{{ item.dateFin || '-' }}</td><td>{{ item.actif ? 'Oui' : 'Non' }}</td>
+            <td class="actions"><button type="button" class="edit-btn" (click)="editRole(item)">Modifier</button><button type="button" class="delete-btn" (click)="deleteRole(item.id)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="rolesHistoriques.length === 0">Aucun rôle enregistré.</p>
+    </div>
+  </main>
+
+  <!-- ================= MATERIEL ================= -->
+  <main *ngIf="currentPage === 'materiel'" class="dashboard-content">
+    <h1>Gestion du matériel</h1>
+    <p>Gérer le matériel, les arrivages et les quantités disponibles.</p>
+    <div class="membre-form">
+      <h2>{{ editingMateriel ? 'Modifier le matériel' : 'Ajouter du matériel' }}</h2>
+      <div class="form-grid">
+        <input type="text" [(ngModel)]="materielForm.nom" name="materielNom" placeholder="Nom">
+        <input type="text" [(ngModel)]="materielForm.categorie" name="materielCategorie" placeholder="Catégorie">
+        <input type="number" [(ngModel)]="materielForm.quantiteTotale" name="materielQt" placeholder="Quantité totale">
+        <input type="number" [(ngModel)]="materielForm.quantiteDisponible" name="materielQd" placeholder="Quantité disponible">
+        <div><label>Date d'arrivage</label><input type="date" [(ngModel)]="materielForm.dateArrivage" name="materielDate"></div>
+      </div>
+      <textarea [(ngModel)]="materielForm.description" name="materielDescription" placeholder="Description"></textarea>
+      <div class="form-actions">
+        <button type="button" (click)="saveMateriel()">{{ editingMateriel ? 'Enregistrer' : 'Ajouter' }}</button>
+        <button type="button" *ngIf="editingMateriel" class="cancel-btn" (click)="resetMaterielForm()">Annuler</button>
+      </div>
+    </div>
+    <div class="members-table">
+      <h2>Inventaire</h2>
+      <table *ngIf="materiels.length > 0">
+        <thead><tr><th>Nom</th><th>Catégorie</th><th>Total</th><th>Disponible</th><th>Arrivage</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let item of materiels">
+            <td>{{ item.nom }}</td><td>{{ item.categorie }}</td><td>{{ item.quantiteTotale }}</td><td>{{ item.quantiteDisponible }}</td><td>{{ item.dateArrivage }}</td>
+            <td class="actions"><button type="button" class="edit-btn" (click)="editMateriel(item)">Modifier</button><button type="button" class="delete-btn" (click)="deleteMateriel(item.id)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="materiels.length === 0">Aucun matériel enregistré.</p>
+    </div>
+  </main>
+
+  <!-- ================= BESOINS MATERIEL ================= -->
+  <main *ngIf="currentPage === 'besoins'" class="dashboard-content">
+    <h1>Besoins en matériel</h1>
+    <p>Soumettre et suivre les besoins matériels des membres.</p>
+    <div class="membre-form">
+      <h2>{{ editingBesoin ? 'Modifier le besoin' : 'Ajouter un besoin' }}</h2>
+      <div class="form-grid">
+        <input type="number" [(ngModel)]="besoinForm.membreId" name="besoinMembreId" placeholder="ID du membre">
+        <input type="text" [(ngModel)]="besoinForm.materielDemande" name="besoinMateriel" placeholder="Matériel demandé">
+        <input type="number" [(ngModel)]="besoinForm.quantite" name="besoinQuantite" placeholder="Quantité">
+        <select [(ngModel)]="besoinForm.statut" name="besoinStatut"><option value="EN_ATTENTE">En attente</option><option value="ACCEPTE">Accepté</option><option value="REFUSE">Refusé</option></select>
+      </div>
+      <textarea [(ngModel)]="besoinForm.justification" name="besoinJustification" placeholder="Justification"></textarea>
+      <div class="form-actions">
+        <button type="button" (click)="saveBesoin()">{{ editingBesoin ? 'Enregistrer' : 'Ajouter' }}</button>
+        <button type="button" *ngIf="editingBesoin" class="cancel-btn" (click)="resetBesoinForm()">Annuler</button>
+      </div>
+    </div>
+    <div class="members-table">
+      <h2>Liste des besoins</h2>
+      <table *ngIf="besoinsMateriel.length > 0">
+        <thead><tr><th>Membre ID</th><th>Matériel</th><th>Quantité</th><th>Statut</th><th>Justification</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let item of besoinsMateriel">
+            <td>{{ item.membreId }}</td><td>{{ item.materielDemande }}</td><td>{{ item.quantite }}</td><td>{{ item.statut }}</td><td>{{ item.justification }}</td>
+            <td class="actions"><button type="button" class="edit-btn" (click)="editBesoin(item)">Modifier</button><button type="button" class="delete-btn" (click)="deleteBesoin(item.id)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="besoinsMateriel.length === 0">Aucun besoin matériel enregistré.</p>
+    </div>
+  </main>
+
+  <!-- ================= CONVENTIONS ================= -->
+  <main *ngIf="currentPage === 'conventions'" class="dashboard-content">
+    <h1>Conventions et collaborations</h1>
+    <p>Gérer les partenaires, conventions et collaborations du laboratoire.</p>
+    <div class="membre-form">
+      <h2>{{ editingConvention ? 'Modifier la convention' : 'Ajouter une convention' }}</h2>
+      <div class="form-grid">
+        <input type="text" [(ngModel)]="conventionForm.partenaire" name="convPartenaire" placeholder="Partenaire">
+        <input type="text" [(ngModel)]="conventionForm.titre" name="convTitre" placeholder="Titre">
+        <div><label>Date de début</label><input type="date" [(ngModel)]="conventionForm.dateDebut" name="convDebut"></div>
+        <div><label>Date de fin</label><input type="date" [(ngModel)]="conventionForm.dateFin" name="convFin"></div>
+        <input type="text" [(ngModel)]="conventionForm.document" name="convDocument" placeholder="Document / chemin">
+        <div><label><input type="checkbox" [(ngModel)]="conventionForm.active" name="convActive"> Convention active</label></div>
+      </div>
+      <textarea [(ngModel)]="conventionForm.description" name="convDescription" placeholder="Description"></textarea>
+      <div class="form-actions">
+        <button type="button" (click)="saveConvention()">{{ editingConvention ? 'Enregistrer' : 'Ajouter' }}</button>
+        <button type="button" *ngIf="editingConvention" class="cancel-btn" (click)="resetConventionForm()">Annuler</button>
+      </div>
+    </div>
+    <div class="members-table">
+      <h2>Liste des conventions</h2>
+      <table *ngIf="conventions.length > 0">
+        <thead><tr><th>Partenaire</th><th>Titre</th><th>Début</th><th>Fin</th><th>Active</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let item of conventions">
+            <td>{{ item.partenaire }}</td><td>{{ item.titre }}</td><td>{{ item.dateDebut }}</td><td>{{ item.dateFin || '-' }}</td><td>{{ item.active ? 'Oui' : 'Non' }}</td>
+            <td class="actions"><button type="button" class="edit-btn" (click)="editConvention(item)">Modifier</button><button type="button" class="delete-btn" (click)="deleteConvention(item.id)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="conventions.length === 0">Aucune convention enregistrée.</p>
+    </div>
+  </main>
+
+  <!-- ================= PV REUNIONS ================= -->
+  <main *ngIf="currentPage === 'reunions'" class="dashboard-content">
+    <h1>PV des réunions</h1>
+    <p>Archiver les réunions, ordres du jour et procès-verbaux.</p>
+    <div class="membre-form">
+      <h2>{{ editingReunion ? 'Modifier la réunion' : 'Ajouter une réunion' }}</h2>
+      <div class="form-grid">
+        <input type="text" [(ngModel)]="reunionForm.titre" name="reunionTitre" placeholder="Titre">
+        <div><label>Date de réunion</label><input type="date" [(ngModel)]="reunionForm.dateReunion" name="reunionDate"></div>
+        <input type="text" [(ngModel)]="reunionForm.cheminPv" name="reunionPv" placeholder="Chemin / fichier PV">
+        <div><label><input type="checkbox" [(ngModel)]="reunionForm.archive" name="reunionArchive"> Archivée</label></div>
+      </div>
+      <textarea [(ngModel)]="reunionForm.ordreDuJour" name="reunionOrdre" placeholder="Ordre du jour"></textarea>
+      <div class="form-actions">
+        <button type="button" (click)="saveReunion()">{{ editingReunion ? 'Enregistrer' : 'Ajouter' }}</button>
+        <button type="button" *ngIf="editingReunion" class="cancel-btn" (click)="resetReunionForm()">Annuler</button>
+      </div>
+    </div>
+    <div class="members-table">
+      <h2>Réunions archivées</h2>
+      <table *ngIf="reunions.length > 0">
+        <thead><tr><th>Titre</th><th>Date</th><th>Ordre du jour</th><th>PV</th><th>Archivée</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let item of reunions">
+            <td>{{ item.titre }}</td><td>{{ item.dateReunion }}</td><td>{{ item.ordreDuJour }}</td><td>{{ item.cheminPv }}</td><td>{{ item.archive ? 'Oui' : 'Non' }}</td>
+            <td class="actions"><button type="button" class="edit-btn" (click)="editReunion(item)">Modifier</button><button type="button" class="delete-btn" (click)="deleteReunion(item.id)">Supprimer</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="reunions.length === 0">Aucune réunion enregistrée.</p>
+    </div>
+  </main>
+
+  <!-- ================= DISCUSSIONS ================= -->
+  <main *ngIf="currentPage === 'discussions'" class="dashboard-content">
+    <h1>Discussions internes</h1>
+    <p>Espace de discussion pour les membres, équipes et événements.</p>
+    <div class="membre-form">
+      <h2>Nouveau message</h2>
+      <div class="form-grid">
+        <input type="email" [(ngModel)]="discussionForm.auteurEmail" name="discussionAuteur" placeholder="Email auteur">
+        <input type="text" [(ngModel)]="discussionForm.equipe" name="discussionEquipe" placeholder="Équipe">
+        <input type="number" [(ngModel)]="discussionForm.evenementId" name="discussionEvent" placeholder="ID événement (optionnel)">
+      </div>
+      <textarea [(ngModel)]="discussionForm.contenu" name="discussionContenu" placeholder="Message"></textarea>
+      <div class="form-actions"><button type="button" (click)="saveDiscussion()">Publier</button><button type="button" class="cancel-btn" (click)="resetDiscussionForm()">Vider</button></div>
+    </div>
+    <div class="members-table">
+      <h2>Messages</h2>
+      <table *ngIf="discussions.length > 0">
+        <thead><tr><th>Auteur</th><th>Équipe</th><th>Événement</th><th>Message</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody><tr *ngFor="let item of discussions"><td>{{ item.auteurEmail }}</td><td>{{ item.equipe || '-' }}</td><td>{{ item.evenementId || '-' }}</td><td>{{ item.contenu }}</td><td>{{ item.dateCreation }}</td><td class="actions"><button type="button" class="delete-btn" (click)="deleteDiscussion(item.id)">Supprimer</button></td></tr></tbody>
+      </table>
+      <p *ngIf="discussions.length === 0">Aucune discussion.</p>
+    </div>
+  </main>
+
+  <!-- ================= CALENDRIER ================= -->
+  <main *ngIf="currentPage === 'calendar'" class="dashboard-content">
+    <h1>Calendrier des événements</h1>
+    <p>Vue chronologique des événements du laboratoire.</p>
+    <div class="membre-form"><label>Année affichée</label><input type="number" [(ngModel)]="calendarYear" name="calendarYear"></div>
+    <div class="members-table">
+      <table *ngIf="evenements.length > 0">
+        <thead><tr><th>Date</th><th>Titre</th><th>Type</th><th>Lieu</th><th>Organisateur</th></tr></thead>
+        <tbody><tr *ngFor="let item of evenements"><td>{{ item.dateDebut }} → {{ item.dateFin || item.dateDebut }}</td><td>{{ item.titre }}</td><td>{{ item.type }}</td><td>{{ item.lieu }}</td><td>{{ item.organisateur }}</td></tr></tbody>
+      </table>
+      <p *ngIf="evenements.length === 0">Aucun événement enregistré.</p>
+    </div>
+  </main>
+
+  <!-- ================= RECHERCHE ================= -->
+  <main *ngIf="currentPage === 'search'" class="dashboard-content search-page">
+
+    <section class="search-hero">
+      <div>
+        <span class="search-kicker">LIAS • Accès rapide aux données</span>
+        <h1>Recherche globale</h1>
+        <p>Retrouvez rapidement un membre, un document, un événement ou une publication.</p>
+      </div>
+
+      <div class="search-hero-icon">🔎</div>
+    </section>
+
+    <section class="search-panel">
+      <div class="search-box-pro">
+        <span class="search-box-icon">⌕</span>
+
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          name="searchQuery"
+          placeholder="Ex. intelligence artificielle, Imane, cybersécurité..."
+          (keyup.enter)="searchGlobal()"
+        >
+
+        <button type="button" (click)="searchGlobal()">
+          Rechercher
+        </button>
+      </div>
+
+      <div class="search-suggestions">
+        <span>Rechercher dans :</span>
+        <span class="search-chip">👥 Membres</span>
+        <span class="search-chip">📁 Documents</span>
+        <span class="search-chip">📅 Événements</span>
+        <span class="search-chip">📄 Publications</span>
+      </div>
+    </section>
+
+    <section class="search-summary" *ngIf="searchQuery.trim()">
+      <div class="search-summary-card">
+        <span>👥</span>
+        <div>
+          <strong>{{ searchResults.membres.length }}</strong>
+          <small>Membres</small>
+        </div>
+      </div>
+
+      <div class="search-summary-card">
+        <span>📁</span>
+        <div>
+          <strong>{{ searchResults.documents.length }}</strong>
+          <small>Documents</small>
+        </div>
+      </div>
+
+      <div class="search-summary-card">
+        <span>📅</span>
+        <div>
+          <strong>{{ searchResults.evenements.length }}</strong>
+          <small>Événements</small>
+        </div>
+      </div>
+
+      <div class="search-summary-card">
+        <span>📄</span>
+        <div>
+          <strong>{{ searchResults.publications.length }}</strong>
+          <small>Publications</small>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="search-welcome"
+      *ngIf="!searchQuery.trim()">
+
+      <div class="search-welcome-icon">🔍</div>
+      <h2>Que recherchez-vous ?</h2>
+      <p>
+        Saisissez un mot-clé pour explorer les ressources du laboratoire LIAS.
+      </p>
+
+      <div class="search-example-row">
+        <span>Exemples :</span>
+        <button type="button" (click)="searchQuery='intelligence artificielle'; searchGlobal()">Intelligence artificielle</button>
+        <button type="button" (click)="searchQuery='cybersécurité'; searchGlobal()">Cybersécurité</button>
+        <button type="button" (click)="searchQuery='2026'; searchGlobal()">2026</button>
+      </div>
+    </section>
+
+    <section
+      class="search-results-grid"
+      *ngIf="searchQuery.trim()">
+
+      <article class="search-result-section">
+        <div class="search-result-heading">
+          <div>
+            <span class="search-result-icon member-result-icon">👥</span>
+            <div>
+              <h2>Membres</h2>
+              <small>{{ searchResults.membres.length }} résultat(s)</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-result-list" *ngIf="searchResults.membres.length > 0">
+          <div class="search-result-item" *ngFor="let item of searchResults.membres">
+            <div class="search-result-avatar">
+              {{ (item.prenom || item.nom || 'M').charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="search-result-content">
+              <strong>{{ item.prenom }} {{ item.nom }}</strong>
+              <span>{{ item.email }}</span>
+              <small>{{ item.statut || 'Membre LIAS' }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-empty-mini" *ngIf="searchResults.membres.length === 0">
+          <span>👤</span>
+          <p>Aucun membre correspondant.</p>
+        </div>
+      </article>
+
+      <article class="search-result-section">
+        <div class="search-result-heading">
+          <div>
+            <span class="search-result-icon document-result-icon">📁</span>
+            <div>
+              <h2>Documents</h2>
+              <small>{{ searchResults.documents.length }} résultat(s)</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-result-list" *ngIf="searchResults.documents.length > 0">
+          <div class="search-result-item" *ngFor="let item of searchResults.documents">
+            <div class="search-result-avatar square-avatar">📄</div>
+            <div class="search-result-content">
+              <strong>{{ item.titre }}</strong>
+              <span>{{ item.type || 'Document' }}</span>
+              <small>{{ item.description || 'Archive documentaire LIAS' }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-empty-mini" *ngIf="searchResults.documents.length === 0">
+          <span>📁</span>
+          <p>Aucun document correspondant.</p>
+        </div>
+      </article>
+
+      <article class="search-result-section">
+        <div class="search-result-heading">
+          <div>
+            <span class="search-result-icon event-result-icon">📅</span>
+            <div>
+              <h2>Événements</h2>
+              <small>{{ searchResults.evenements.length }} résultat(s)</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-result-list" *ngIf="searchResults.evenements.length > 0">
+          <div class="search-result-item" *ngFor="let item of searchResults.evenements">
+            <div class="search-result-avatar square-avatar">📅</div>
+            <div class="search-result-content">
+              <strong>{{ item.titre }}</strong>
+              <span>{{ item.type || 'Événement' }} <ng-container *ngIf="item.lieu">• {{ item.lieu }}</ng-container></span>
+              <small>{{ item.dateDebut || item.date || 'Événement LIAS' }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-empty-mini" *ngIf="searchResults.evenements.length === 0">
+          <span>📆</span>
+          <p>Aucun événement correspondant.</p>
+        </div>
+      </article>
+
+      <article class="search-result-section">
+        <div class="search-result-heading">
+          <div>
+            <span class="search-result-icon publication-result-icon">📄</span>
+            <div>
+              <h2>Publications</h2>
+              <small>{{ searchResults.publications.length }} résultat(s)</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-result-list" *ngIf="searchResults.publications.length > 0">
+          <div class="search-result-item" *ngFor="let item of searchResults.publications">
+            <div class="search-result-avatar square-avatar">🔬</div>
+            <div class="search-result-content">
+              <strong>{{ item.titre }}</strong>
+              <span>{{ item.auteurPrincipal || 'Auteur non renseigné' }}</span>
+              <small>
+                {{ item.type || 'Publication' }}
+                <ng-container *ngIf="item.annee">• {{ item.annee }}</ng-container>
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-empty-mini" *ngIf="searchResults.publications.length === 0">
+          <span>📚</span>
+          <p>Aucune publication correspondante.</p>
+        </div>
+      </article>
+
+    </section>
+
+    <section
+      class="search-no-results"
+      *ngIf="
+        searchQuery.trim() &&
+        searchResults.membres.length === 0 &&
+        searchResults.documents.length === 0 &&
+        searchResults.evenements.length === 0 &&
+        searchResults.publications.length === 0
+      ">
+      <span>🔎</span>
+      <h3>Aucun résultat trouvé pour « {{ searchQuery }} »</h3>
+      <p>Essayez un autre mot-clé, un nom de membre, une année ou un domaine scientifique.</p>
+    </section>
+
+  </main>
+
+  <!-- ================= NOTIFICATIONS ================= -->
+  <main *ngIf="currentPage === 'notifications'" class="dashboard-content">
+    <h1>Notifications</h1>
+    <p>Consulter et créer les notifications internes.</p>
+    <div class="membre-form">
+      <h2>Nouvelle notification</h2>
+      <div class="form-grid"><input type="text" [(ngModel)]="notificationForm.destinataire" name="notifDest" placeholder="Destinataire"><input type="text" [(ngModel)]="notificationForm.type" name="notifType" placeholder="Type"></div>
+      <textarea [(ngModel)]="notificationForm.message" name="notifMessage" placeholder="Message"></textarea>
+      <div class="form-actions"><button type="button" (click)="saveNotification()">Ajouter</button><button type="button" class="cancel-btn" (click)="resetNotificationForm()">Vider</button></div>
+    </div>
+    <div class="members-table">
+      <h2>Liste des notifications</h2>
+      <table *ngIf="notifications.length > 0">
+        <thead><tr><th>Destinataire</th><th>Type</th><th>Message</th><th>Date</th><th>Lue</th><th>Actions</th></tr></thead>
+        <tbody><tr *ngFor="let item of notifications"><td>{{ item.destinataire }}</td><td>{{ item.type }}</td><td>{{ item.message }}</td><td>{{ item.dateCreation }}</td><td>{{ item.lue ? 'Oui' : 'Non' }}</td><td class="actions"><button type="button" class="delete-btn" (click)="deleteNotification(item.id)">Supprimer</button></td></tr></tbody>
+      </table>
+      <p *ngIf="notifications.length === 0">Aucune notification.</p>
+    </div>
+  </main>
+
+  <!-- ================= AUDIT ================= -->
+  <main *ngIf="currentPage === 'audit'" class="dashboard-content">
+    <h1>Historique des actions</h1>
+    <p>Traçabilité des opérations réalisées dans la plateforme.</p>
+    <div class="members-table">
+      <table *ngIf="auditLogs.length > 0">
+        <thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Entité</th><th>Détails</th></tr></thead>
+        <tbody><tr *ngFor="let item of auditLogs"><td>{{ item.dateAction || item.dateCreation }}</td><td>{{ item.utilisateur || item.emailUtilisateur || '-' }}</td><td>{{ item.action }}</td><td>{{ item.entite || '-' }}</td><td>{{ item.details || '-' }}</td></tr></tbody>
+      </table>
+      <p *ngIf="auditLogs.length === 0">Aucune action enregistrée dans l'historique.</p>
+    </div>
+  </main>
+
+
+  <!-- ================= THESES DE DOCTORAT ================= -->
+
+  <main
+    *ngIf="currentPage === 'theses'"
+    class="dashboard-content">
+
+    <h1>Suivi des Thèses de Doctorat</h1>
+
+    <p>
+      Gestion des sujets de thèse, directeurs de thèse et doctorants du laboratoire LIAS.
+    </p>
+
+    <div class="membre-form">
+
+      <h2>
+        {{ editingThese ? 'Modifier la thèse' : 'Ajouter une thèse' }}
+      </h2>
+
+      <div class="form-grid">
+
+        <input
+          type="text"
+          [(ngModel)]="theseForm.doctorant"
+          name="theseDoctorant"
+          placeholder="Nom du doctorant"
+        >
+
+        <input
+          type="text"
+          [(ngModel)]="theseForm.sujet"
+          name="theseSujet"
+          placeholder="Sujet de thèse"
+        >
+
+        <input
+          type="text"
+          [(ngModel)]="theseForm.directeur"
+          name="theseDirecteur"
+          placeholder="Directeur de thèse"
+        >
+
+        <input
+          type="number"
+          [(ngModel)]="theseForm.anneeInscription"
+          name="theseAnnee"
+          placeholder="Année d'inscription"
+        >
+
+        <select
+          [(ngModel)]="theseForm.statut"
+          name="theseStatut">
+
+          <option value="EN_COURS">En cours</option>
+          <option value="SOUTENUE">Soutenue</option>
+          <option value="SUSPENDUE">Suspendue</option>
+
+        </select>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          (click)="saveThese()">
+
+          {{ editingThese ? 'Enregistrer les modifications' : 'Ajouter Thèse' }}
+
+        </button>
+
+        <button
+          type="button"
+          *ngIf="editingThese"
+          class="cancel-btn"
+          (click)="resetTheseForm()">
+
+          Annuler
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="members-table">
+
+      <h2>Liste des thèses</h2>
+
+      <table *ngIf="theses.length > 0">
+
+        <thead>
+
+          <tr>
+            <th>Doctorant</th>
+            <th>Sujet de thèse</th>
+            <th>Directeur</th>
+            <th>Inscription</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let item of theses">
+
+            <td>🎓 {{ item.doctorant }}</td>
+
+            <td>{{ item.sujet }}</td>
+
+            <td>{{ item.directeur }}</td>
+
+            <td>{{ item.anneeInscription }}</td>
+
+            <td>
+              <span
+                class="status-badge"
+                [class.status-done]="item.statut === 'SOUTENUE'"
+                [class.status-paused]="item.statut === 'SUSPENDUE'">
+                {{
+                  item.statut === 'EN_COURS'
+                    ? 'En cours'
+                    : item.statut === 'SOUTENUE'
+                      ? 'Soutenue'
+                      : 'Suspendue'
+                }}
+              </span>
+            </td>
+
+            <td class="actions">
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="editThese(item)">
+                Modifier
+              </button>
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteThese(item.id)">
+                Supprimer
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      <p *ngIf="theses.length === 0">
+        Aucune thèse enregistrée.
+      </p>
+
+    </div>
+
+  </main>
+
+
+  <!-- ================= DOCUMENTS / ARCHIVES ================= -->
+
+  <main
+    *ngIf="currentPage === 'documents'"
+    class="dashboard-content">
+
+    <h1>Archives documentaires</h1>
+
+    <p>
+      Gestion et archivage des documents du laboratoire LIAS.
+    </p>
+
+
+    <div class="membre-form">
+
+      <h2>
+        {{ editingDocument ? 'Modifier le document' : 'Ajouter un document' }}
+      </h2>
+
+
+      <div class="form-grid">
+
+        <input
+          type="text"
+          [(ngModel)]="documentForm.titre"
+          name="titreDocument"
+          placeholder="Titre du document"
+        >
+
+
+        <select
+          [(ngModel)]="documentForm.type"
+          name="typeDocument">
+
+          <option value="">
+            Choisir un type
+          </option>
+
+          <option value="FINANCEMENT">
+            Demande de financement
+          </option>
+
+          <option value="PROGRAMME">
+            Programme
+          </option>
+
+          <option value="ATTESTATION">
+            Attestation
+          </option>
+
+          <option value="RAPPORT">
+            Rapport
+          </option>
+
+          <option value="ADMINISTRATIF">
+            Document administratif
+          </option>
+
+        </select>
+
+
+        <input
+          type="text"
+          [(ngModel)]="documentForm.cheminFichier"
+          name="cheminFichier"
+          placeholder="Nom ou chemin du fichier"
+        >
+
+        <div>
+          <label>Fichier réel</label>
+          <input type="file" (change)="onDocumentFileSelected($event)">
+        </div>
+
+
+
+        <div>
+
+          <label>Date d'ajout</label>
+
+          <input
+            type="date"
+            [(ngModel)]="documentForm.dateAjout"
+            name="dateAjoutDocument"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>
+
+            <input
+              type="checkbox"
+              [(ngModel)]="documentForm.archive"
+              name="archiveDocument"
+            >
+
+            Document archivé
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <textarea
+        [(ngModel)]="documentForm.description"
+        name="descriptionDocument"
+        placeholder="Description du document">
+      </textarea>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          (click)="saveDocument()">
+
+          {{ editingDocument ? 'Enregistrer les modifications' : 'Ajouter' }}
+
+        </button>
+
+
+        <button
+          type="button"
+          *ngIf="editingDocument"
+          class="cancel-btn"
+          (click)="resetDocumentForm()">
+
+          Annuler
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="members-table">
+
+      <h2>Liste des documents</h2>
+
+      <table *ngIf="documents.length > 0">
+
+        <thead>
+
+          <tr>
+            <th>Titre</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Fichier</th>
+            <th>Archivé</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let document of documents">
+
+            <td>
+              {{ document.titre }}
+            </td>
+
+            <td>
+              {{ document.type }}
+            </td>
+
+            <td>
+              {{ document.dateAjout }}
+            </td>
+
+            <td>
+              {{ document.cheminFichier }}
+            </td>
+
+            <td>
+              {{ document.archive ? 'Oui' : 'Non' }}
+            </td>
+
+            <td class="actions">
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="downloadDocument(document.cheminFichier)">
+                Télécharger
+              </button>
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="editDocument(document)">
+                Modifier
+              </button>
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteDocument(document.id)">
+                Supprimer
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+
+      <p *ngIf="documents.length === 0">
+        Aucun document enregistré.
+      </p>
+
+    </div>
+
+  </main>
+
+
+  <!-- ================= RAPPORT ANNUEL ================= -->
+
+  <main
+    *ngIf="currentPage === 'rapport'"
+    class="dashboard-content">
+
+    <h1>Rapports Annuels & Bilans d'Activité</h1>
+
+    <p>
+      Synthèse des activités scientifiques, publications, événements,
+      membres et bilans du laboratoire LIAS.
+    </p>
+
+    <div class="rapport-hero">
+      <h2>📊 Rapport d'activité {{ rapportYear }}</h2>
+      <p>
+        Vue consolidée des principaux indicateurs du laboratoire
+        et historique des rapports institutionnels.
+      </p>
+    </div>
+
+    <div class="membre-form">
+
+      <h2>Générer / consulter un rapport</h2>
+
+      <div class="rapport-toolbar">
+
+        <div>
+          <label>Titre du rapport</label>
+          <input
+            type="text"
+            [(ngModel)]="rapportTitre"
+            name="rapportTitre"
+            placeholder="Titre du rapport"
+          >
+        </div>
+
+        <div>
+          <label>Année</label>
+          <input
+            type="number"
+            [(ngModel)]="rapportYear"
+            name="rapportYear"
+          >
+        </div>
+
+        <div>
+          <label>Auteur / Comité</label>
+          <input
+            type="text"
+            [(ngModel)]="rapportAuteur"
+            name="rapportAuteur"
+            placeholder="Auteur / Comité"
+          >
+        </div>
+
+        <button
+          type="button"
+          (click)="loadRapportAnnuelParAnnee()">
+          Générer
+        </button>
+
+      </div>
+
+      <div
+        *ngIf="rapportMessage"
+        class="rapport-error">
+        {{ rapportMessage }}
+      </div>
+
+    </div>
+
+    <div
+      *ngIf="rapportLoading"
+      class="membre-form">
+      Chargement des statistiques...
+    </div>
+
+    <div *ngIf="!rapportLoading">
+
+      <div class="rapport-summary-grid">
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">👥</div>
+          <div class="kpi-value">{{ rapportStats.membres }}</div>
+          <div class="kpi-label">Membres</div>
+        </div>
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">🧠</div>
+          <div class="kpi-value">{{ rapportStats.equipes }}</div>
+          <div class="kpi-label">Équipes de recherche</div>
+        </div>
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">📄</div>
+          <div class="kpi-value">{{ rapportStats.publications }}</div>
+          <div class="kpi-label">Publications</div>
+        </div>
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">📅</div>
+          <div class="kpi-value">{{ rapportStats.evenements }}</div>
+          <div class="kpi-label">Événements</div>
+        </div>
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">🔗</div>
+          <div class="kpi-value">{{ affiliations.length }}</div>
+          <div class="kpi-label">Affiliations</div>
+        </div>
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">👑</div>
+          <div class="kpi-value">{{ mandats.length }}</div>
+          <div class="kpi-label">Mandats</div>
+        </div>
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">🎓</div>
+          <div class="kpi-value">{{ theses.length }}</div>
+          <div class="kpi-label">Thèses de doctorat</div>
+        </div>
+
+        <div class="rapport-kpi">
+          <div class="kpi-icon">📁</div>
+          <div class="kpi-value">{{ documents.length }}</div>
+          <div class="kpi-label">Documents archivés</div>
+        </div>
+
+      </div>
+
+      <div class="members-table rapport-list">
+
+        <h2>Rapports et bilans disponibles</h2>
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Année</th>
+              <th>Auteur / Comité</th>
+              <th>Type</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let item of rapportsDemo">
+
+              <td>📊 {{ item.titre }}</td>
+
+              <td>{{ item.annee }}</td>
+
+              <td>{{ item.auteur }}</td>
+
+              <td>{{ item.type }}</td>
+
+              <td>
+                <span
+                  class="rapport-badge"
+                  [class.finalise]="item.statut === 'FINALISE'">
+
+                  {{ item.statut === 'FINALISE' ? 'Finalisé' : 'En cours' }}
+
+                </span>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>

@@ -1,0 +1,3 @@
+Copie TOUT le contenu de ce dossier dans:
+C:\Users\outlok\Desktop\LIAS-FINAL\lias-frontend
+Quand Windows demande de remplacer app.ts/app.html/app.css: choisir Remplacer.
